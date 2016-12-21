@@ -81,6 +81,7 @@ myApp.controller('mainController', function($scope, $http, $location, anchorSmoo
             $scope.player.audio.play();
             startTrackTick();
         } else {
+            $scope.player.playlist = $scope.trackList.originalTrackList;
             playTrack(track);
         }
     }
