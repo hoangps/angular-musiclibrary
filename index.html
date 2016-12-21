@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en-us" ng-app="myApp">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>My Music Library | HoangPS</title>
+    <link rel="icon" href="favicon.png">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+        crossorigin="anonymous" />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="angular.min.js"></script>
+</head>
+
+<body ng-controller="mainController">
+    <div class="header">
+        <div class="container">
+            <h1>My Music Library</h1>
+        </div>
+    </div>
+    <div id="content" class="container main-content">
+        <div>
+            <div class="form search-form row">
+                <div class="form-group col-md-6">
+                    <label class="control-label">Search for track</label>
+                    <div class="dropdown">
+                        <input ng-change="search('tracks')" ng-focus="search('tracks')" ng-model="search.keywords" class="form-control dropdown-toggle" type="text" id="dropdownMenu2"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" />
+                        <ul class="search-result dropdown-menu col-md-12" aria-labelledby="dropdownMenu2" ng-show="search.result.length > 0 && search.resource == 'tracks'">
+                            <li ng-repeat="track in search.result">
+                                <a href="javascript:void(0);" ng-click="selectTrack(track)"><img ng-src="{{track.artwork_url}}" /> {{track.title}}</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="form-group col-md-6">
+                    <label class="control-label">Search for user profile</label>
+                    <div class="dropdown">
+                        <input ng-change="search('users')" ng-focus="search('users')" ng-model="search.keywords" class="form-control dropdown-toggle" type="text" id="dropdownMenu1"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" />
+                        <ul class="search-result dropdown-menu col-md-12" aria-labelledby="dropdownMenu1" ng-show="search.result.length > 0 && search.resource == 'users'">
+                            <li ng-repeat="user in search.result">
+                                <a href="javascript:void(0);" ng-click="selectProfile(user)"><img ng-src="{{user.avatar_url}}" /> {{ !user.full_name ? user.username : user.full_name }}</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="user-information row" ng-show="profileSelected">
+                <div class="user-profile col-md-6">
+                    <h2>User Profile</h2>
+                    <div class="form-group">
+                        <img ng-src="{{userProfile.avatar_url}}" />
+                        <input type=hidden value="{{userProfile.id}}" />
+                        <label class="profile-name">
+                            <h3>{{ !userProfile.full_name ? userProfile.username : userProfile.full_name }}</h3>
+                            <a href="{{userProfile.permalink_url}}" target="_blank">View profile</a>
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <input type="button" class="btn btn-default" value="View details" ng-click="showList('tracks', 'Tracks')"></input>
+                        <label class="profile-stats"><strong>Tracks: </strong>{{ userProfile.track_count }}</label>
+                    </div>
+                    <div class="form-group">
+                        <input type="button" class="btn btn-default" value="View details" ng-click="showList('playlists', 'Playlists')"></input>
+                        <label class="profile-stats"><strong>Playlists: </strong>{{ userProfile.playlist_count }}</label>
+                    </div>
+                    <div class="form-group">
+                        <input type="button" class="btn btn-default" value="View details" ng-click="showList('favorites', 'Likes')"></input>
+                        <label class="profile-stats"><strong>Favorites: </strong>{{ userProfile.public_favorites_count }}</label>
+                    </div>
+                </div>
+                <div id="track-list" class="track-list col-md-6" ng-show="trackList.tracks.length > 0">
+                    <h2>{{trackList.listName}}</h2>
+                    <ul>
+                        <li ng-repeat="track in trackList.tracks">
+                            <span class="btn-play" ng-click="player.play(track)" ng-hide="track.id == player.track.id && player.isPlaying"></span>
+                            <span class="btn-pause" ng-click="player.pause()" ng-show="track.id == player.track.id && player.isPlaying"></span>
+                            <span class="track-index">{{trackList.pageIndex*10 + $index + 1}}</span>
+                            <span class="track-title">{{track.title}} - {{track.user.username}} - {{getTrackDuration(track.duration)}}</span>
+                        </li>
+                    </ul>
+                    <div class="text-center">
+                        <div class="pagination" ng-show="trackList.pageCount > 1">
+                            <span class="btn btn-default" ng-click="goPage(0)" ng-disabled="trackList.pageIndex < 2"><<</span>
+                            <span class="btn btn-default" ng-click="goPage(trackList.pageIndex-1)"  ng-disabled="trackList.pageIndex < 1"><</span>
+                            <span class="current-page control-label">Page {{trackList.pageIndex + 1}} of {{trackList.pageCount}}</span>
+                            <span class="btn btn-default" ng-click="goPage(trackList.pageIndex+1)" ng-disabled="trackList.pageIndex > trackList.pageCount-2">></span>
+                            <span class="btn btn-default" ng-click="goPage(trackList.pageCount-1)" ng-disabled="trackList.pageIndex > trackList.pageCount-3">>></span>
+                        </div>
+                        <div class="notice"><span><i>(*) Some tracks may not be available for public acess. </i></span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer ng-show="player.audio.src">
+        <div class="music-player">
+            <div class="container">
+                <div class="controls col-md-3 col-sm-3 text-center">
+                    <span class="btn-action btn-prev align-middle" ng-click="player.prev()"></span>
+                    <span class="btn-action btn-play align-middle" ng-hide="player.isPlaying" ng-click="player.play(player.track)"></span>
+                    <span class="btn-action btn-pause align-middle" ng-show="player.isPlaying" ng-click="player.pause()"></span>
+                    <span class="btn-action btn-next align-middle" ng-click="player.next()"></span>
+                </div>
+                <div class="time-elapse-slider col-md-7 col-sm-9 hidden-xs">
+                    <span class="track-elapsed col-md-1 col-sm-2">{{getTrackDuration(player.audio.currentTime*1000)}}</span>
+                    <div class="slider-wrapper col-md-10 col-sm-8">
+                        <div class="track-length"></div>
+                        <div class="track-elapsed" ng-style='player.trackElapsedPercentageStyle'></div>
+                    </div>
+                    <span class="track-length col-md-1 col-sm-2">{{getTrackDuration(player.track.duration)}}</span>
+                </div>
+                <div class="track-info col-md-2 hidden-sm">
+                    <span class="track-title">{{player.track.title | cut:true:50:'...'}}</span>
+                    <span class="track-artist">{{(!player.track.user.full_name ? player.track.user.username : player.track.user.full_name) | cut:true:30:'...'}}</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <script src="https://connect.soundcloud.com/sdk/sdk-3.1.2.js"></script>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+        crossorigin="anonymous"></script>
+    <script>
+    </script>
+    <script src="app.js"></script>
+    <script src="stringCutFilter.js"></script>
+    <script src="anchorSmoothScrollService.js"></script>
+    <script src="https://connect.soundcloud.com/sdk/sdk-3.1.2.js"></script>
+</body>
+
+</html>

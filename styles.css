@@ -1,0 +1,177 @@
+body {
+    background: #F2F2F2;
+}
+
+.header {
+    background-color: #f49242
+}
+
+.header h1 {
+    margin-bottom: 20px;
+    color: #fff
+}
+
+.main-content {
+    padding-top: 25px;
+    min-height: 870px;
+    background-color: #fff;
+
+    padding: 25px 50px 120px 50px;
+}
+
+
+@media screen and (max-width: 480px) {
+    .main-content {
+        padding: 25px;
+    }
+}
+
+.profile-stats {
+    padding-left: 25px;
+}
+
+ul {
+    padding: 0
+}
+
+ul.search-result li img {
+    max-width: 50px
+}
+
+.user-information {
+    padding-top:25px;
+}
+
+label.profile-name {
+    padding-left: 25px;
+}
+
+.track-list ul {
+    list-style: none;
+}
+
+.track-list ul li {
+    padding: 11px 0 5px;
+    border-bottom: 1px solid #ececec;
+}
+
+.track-list ul li:hover {
+    background-color: #f4f4f4
+}
+
+.track-list ul li .track-index {
+    display: inline-block;
+    vertical-align: 10px;
+    padding: 0 10px 0 5px;
+    width: 5%;
+    height: 30px;
+    vertical-align: text-bottom;
+}
+
+.track-list ul li .btn-play {
+    background: url(img/btn-play.png) no-repeat;
+    display: inline-block;
+    height: 30px;
+    width: 30px;
+    margin-left: 10px;
+    vertical-align: super;
+}
+
+.track-list ul li .btn-pause {
+    background: url(img/btn-pause.png) no-repeat;
+    display: inline-block;
+    height: 30px;
+    width: 30px;
+    margin-left: 10px;
+    vertical-align: super;
+}
+
+.track-list ul li .btn-play:hover, .track-list ul li .btn-pause:hover {
+    cursor: pointer
+}
+
+.track-list ul li .track-title {
+    display: inline-block;
+    vertical-align: 10px;
+    padding-left: 10px;
+    max-width: 75%;
+}
+
+.pagination .current-page {padding: 5px}
+.notice {font-size: 12px;}
+
+
+footer {    
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: 60px;
+    background-color: #f5f5f5;
+    border-top: 1px solid rgba(0,0,0,.15);
+}
+
+footer .music-player .controls{
+    padding: 15px;
+}
+
+footer .music-player .controls .btn-action {
+    display: inline-block;
+    height: 17px;
+    width: 35px;
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+footer .music-player .controls .btn-action.btn-play {
+    background: url(img/music-player/btn-play.svg) no-repeat;
+    height: 23px;
+}
+footer .music-player .controls .btn-action.btn-pause {
+    background: url(img/music-player/btn-pause.svg) no-repeat;
+    height: 23px;
+}
+footer .music-player .controls .btn-action.btn-prev {
+    background: url(img/music-player/btn-prev.svg) no-repeat;
+     margin-bottom: 3px;
+}
+footer .music-player .controls .btn-action.btn-next {
+    background: url(img/music-player/btn-next.svg) no-repeat;
+    margin-bottom: 3px;
+}
+
+footer .music-player .time-elapse-slider {
+    padding-top: 20px;
+}
+
+footer .music-player .time-elapse-slider span {
+    font-size: 12px;
+}
+
+footer .music-player .time-elapse-slider .slider-wrapper {
+    padding-top: 7px;
+}
+
+footer .music-player .time-elapse-slider .slider-wrapper .track-length {
+    width: 100%;
+    height: 2px;
+    background-color: rgba(0,0,0,.15);
+}
+
+footer .music-player .time-elapse-slider .slider-wrapper .track-elapsed {
+    height: 2px;
+    background-color: #f49242;
+    margin-top: -2px;
+}
+
+footer .music-player .track-info {
+    padding-top: 10px;
+    font-size: 12px;
+}
+
+footer .music-player .track-info .track-title {
+    display:block;
+}
+
+footer .music-player .track-info .track-artist {
+    color: rgba(0,0,0,.6);
+}
