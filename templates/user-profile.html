@@ -1,0 +1,21 @@
+<h2>User Profile</h2>
+<div class="form-group">
+    <img ng-src="{{userProfile.avatar_url}}" />
+    <input type=hidden value="{{userProfile.id}}" />
+    <label class="profile-name">
+        <h3>{{ !userProfile.full_name ? userProfile.username : userProfile.full_name }}</h3>
+        <a href="{{userProfile.permalink_url}}" target="_blank">View profile</a>
+    </label>
+</div>
+<div class="form-group">
+    <input type="button" class="btn btn-default" value="View details" ng-click="showList('tracks', 'Tracks')"></input>
+    <label class="profile-stats"><strong>Tracks: </strong>{{ userProfile.track_count }}</label>
+</div>
+<div class="form-group">
+    <input type="button" class="btn btn-default" value="View details" ng-click="showList('playlists', 'Playlists')"></input>
+    <label class="profile-stats"><strong>Playlists: </strong>{{ userProfile.playlist_count }}</label>
+</div>
+<div class="form-group">
+    <input type="button" class="btn btn-default" value="View details" ng-click="showList('favorites', 'Likes')"></input>
+    <label class="profile-stats"><strong>Favorites: </strong>{{ userProfile.public_favorites_count }}</label>
+</div>

@@ -1,0 +1,25 @@
+
+    <footer ng-show="player.audio.src">
+        <div class="music-player">
+            <div class="container">
+                <div class="controls col-md-3 col-sm-3 text-center">
+                    <span class="btn-action btn-prev align-middle" ng-click="player.prev()"></span>
+                    <span class="btn-action btn-play align-middle" ng-hide="player.isPlaying" ng-click="player.play(player.track)"></span>
+                    <span class="btn-action btn-pause align-middle" ng-show="player.isPlaying" ng-click="player.pause()"></span>
+                    <span class="btn-action btn-next align-middle" ng-click="player.next()"></span>
+                </div>
+                <div class="time-elapse-slider col-md-7 col-sm-9 hidden-xs">
+                    <span class="track-elapsed col-md-1 col-sm-2">{{getTrackDuration(player.audio.currentTime*1000)}}</span>
+                    <div class="slider-wrapper col-md-10 col-sm-8">
+                        <div class="track-length"></div>
+                        <div class="track-elapsed" ng-style='player.trackElapsedPercentageStyle'></div>
+                    </div>
+                    <span class="track-length col-md-1 col-sm-2">{{getTrackDuration(player.track.duration)}}</span>
+                </div>
+                <div class="track-info col-md-2 hidden-sm">
+                    <span class="track-title">{{player.track.title | cut:true:50:'...'}}</span>
+                    <span class="track-artist">{{(!player.track.user.full_name ? player.track.user.username : player.track.user.full_name) | cut:true:30:'...'}}</span>
+                </div>
+            </div>
+        </div>
+    </footer>

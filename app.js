@@ -151,14 +151,18 @@ myApp.controller('mainController', function($scope, $http, $location, anchorSmoo
             $scope.player.track = track.tracks[0];
         } else {
             $scope.player.track = track;
-
         }
 
-        $scope.player.audio.src = $scope.player.track.stream_url;
-        $scope.player.audio.play();
-        $scope.player.isPlaying = true;
+        if(!$scope.player.track.streamable){
+            if($scope.player.playlist.length > 1)
+                $scope.player.next();
+        } else {
+            $scope.player.audio.src = $scope.player.track.stream_url;
+            $scope.player.audio.play();
+            $scope.player.isPlaying = true;
 
-        startTrackTick();
+            startTrackTick();
+        }
     }
 
     $scope.goPage = function(pageIndex){
@@ -218,4 +222,40 @@ myApp.controller('mainController', function($scope, $http, $location, anchorSmoo
         $scope.trackList.pageCount = dataLength % pageSize == 0 ? dataLength / pageSize : parseInt(dataLength / pageSize) + 1;
     }
 
+});
+
+myApp.directive('search', function(){
+    return {
+        restrict: 'E',
+        replace: true,
+        templateUrl: 'templates/search.html'
+    };
+})
+.directive('userProfile', function(){
+    return {
+        restrict: 'E',
+        replace: true,
+        templateUrl: 'templates/user-profile.html'
+    };
+})
+.directive('trackList', function(){
+    return {
+        restrict: 'E',
+        replace: true,
+        templateUrl: 'templates/track-list.html'
+    };
+})
+.directive('pagination', function(){
+    return {
+        restrict: 'E',
+        replace: true,
+        templateUrl: 'templates/pagination.html'
+    };
+})
+.directive('footerMusicPlayer', function(){
+    return {
+        restrict: 'E',
+        replace: true,
+        templateUrl: 'templates/footer-music-player.html'
+    };
 });
