@@ -3,7 +3,7 @@
     <div class="form-group col-md-6">
         <label class="control-label">Search for track</label>
         <div class="dropdown">
-            <input ng-change="search('tracks')" ng-focus="search('tracks')" ng-model="search.keywords" class="form-control dropdown-toggle" type="text" id="dropdownMenu2"
+            <input ng-change="search('tracks')" ng-focus="search('tracks')" ng-model="search.keywords" placeholder="Enter any keywords you come in mind..." class="form-control dropdown-toggle" type="text" id="dropdownMenu2"
                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" />
             <ul class="search-result dropdown-menu col-md-12" aria-labelledby="dropdownMenu2" ng-show="search.result.length > 0 && search.resource == 'tracks'">
                 <li ng-repeat="track in search.result">
@@ -15,7 +15,7 @@
     <div class="form-group col-md-6">
         <label class="control-label">Search for user profile</label>
         <div class="dropdown">
-            <input ng-change="search('users')" ng-focus="search('users')" ng-model="search.keywords" class="form-control dropdown-toggle" type="text" id="dropdownMenu1"
+            <input ng-change="search('users')" ng-focus="search('users')" ng-model="search.keywords" placeholder="then I will surprise you..." class="form-control dropdown-toggle" type="text" id="dropdownMenu1"
                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" />
             <ul class="search-result dropdown-menu col-md-12" aria-labelledby="dropdownMenu1" ng-show="search.result.length > 0 && search.resource == 'users'">
                 <li ng-repeat="user in search.result">

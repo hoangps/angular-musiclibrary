@@ -76,6 +76,22 @@ label.profile-name {
     margin-left: 10px;
     vertical-align: super;
 }
+.track-list ul li .btn-add {
+    background: url(img/btn-add.png) no-repeat;
+    display: inline-block;
+    height: 30px;
+    width: 30px;
+    margin-left: 10px;
+    vertical-align: super;
+}
+.track-list ul li .btn-delete {
+    background: url(img/btn-delete.png) no-repeat;
+    display: inline-block;
+    height: 30px;
+    width: 30px;
+    margin-left: 10px;
+    vertical-align: super;
+}
 
 .track-list ul li .btn-pause {
     background: url(img/btn-pause.png) no-repeat;
@@ -100,6 +116,10 @@ label.profile-name {
 .pagination .current-page {padding: 5px}
 .notice {font-size: 12px;}
 
+.stats {
+	position: fixed;
+    bottom: 0px;
+}
 
 footer {    
     position: fixed;
