@@ -1,0 +1,32 @@
+<md-dialog aria-label="Mango (Fruit)">
+    <form ng-cloak>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Mango (Fruit)</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="cancel()">
+                    <md-icon md-svg-src="img/icons/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div class="md-dialog-content">
+
+                <h3>Add to playlist</h3>
+
+                <ul class="dialog-playlists">
+                    <li ng-repeat="playlist in playlists" class="dialog-playlist">
+                        <a href="javascript:void(0);" ng-click="addToPlaylist(track, playlist)">{{playlist.name}}</a>
+                    </li>
+                </ul>
+
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <span flex></span>
+            <md-button ng-click="hide()">
+                Close
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

@@ -21,29 +21,36 @@
     </div>
     <div id="content" class="container main-content">
         <div>
+            <div class="alert-wrapper">
+                <div uib-alert ng-repeat="alert in alerts" ng-class="'alert-' + (alert.type || 'warning')" dismiss-on-timeout="5000" close="closeAlert($index)">{{alert.msg}}</div>
+            </div>
             <search></search>
             <div class="actions">
                 <a href="#" class="btn btn-default" ng-click="displayLibrary()" ng-hide="showLibrary">My music library</a>
-                <a href="#" class="btn btn-default" ng-click="hideLibrary()" ng-show="showLibrary && userProfile">
-                    Back to {{ !userProfile.full_name ? userProfile.username : userProfile.full_name }} profile
+                <a href="#" class="btn btn-default" ng-click="hideLibrary()" ng-show="showLibrary && profileSelected">
+                    Back to <strong>{{ !userProfile.full_name ? userProfile.username : userProfile.full_name }}</strong>
                 </a>
             </div>
             <div class="user-library" ng-show="showLibrary">
-                <div id="user-track-list" class="track-list col-md-6" ng-show="library.playlists[0].length > 0">
-                    <h2>{{trackList.listName}}</h2>
+                <div class="col-md-6">
+                    <h2>Your Music Library</h2>
+                    <span>You have <strong>{{library.playlists[0].originalTrackList.length || 0}}</strong> tracks in your library</span>
+                </div>
+                <div id="user-track-list" class="track-list col-md-6" ng-show="library.playlists[0].tracks.length > 0">
+                    <h2>Your tracks</h2>
                     <ul>
-                        <li ng-repeat="track in library.playlists[0]">
-                            <span class="btn-delete" ng-click="removeFromPlaylist(track)"></span>
-                            <span class="btn-play" ng-click="player.play(track)" ng-hide="track.id == player.track.id && player.isPlaying"></span>
+                        <li ng-repeat="track in library.playlists[0].tracks">
+                            <span class="btn-delete" ng-click="removeFromPlaylist(library.playlists[0].pageIndex*10 + $index)" title="Remove from playlist"></span>
+                            <span class="btn-play" ng-click="player.play(library.playlists[0].originalTrackList, track)" ng-hide="track.id == player.track.id && player.isPlaying"></span>
                             <span class="btn-pause" ng-click="player.pause()" ng-show="track.id == player.track.id && player.isPlaying"></span>
-                            <span class="track-index">{{trackList.pageIndex*10 + $index + 1}}</span>
+                            <span class="track-index">{{library.playlists[0].pageIndex*10 + $index + 1}}</span>
                             <span class="track-title">{{track.title}} - {{track.user.username}} - {{getTrackDuration(track.duration)}}</span>
                         </li>
                     </ul>
-                    <pagination></pagination>
+                    <library-pagination></library-pagination>
                 </div>
             </div>
-            <div class="user-information row" ng-show="profileSelected">
+            <div class="user-information row" ng-show="!showLibrary && profileSelected">
                 <div class="user-profile col-md-6">
                     <h2>User Profile</h2>
                     <div class="form-group">
@@ -71,8 +78,8 @@
                     <h2>{{trackList.listName}}</h2>
                     <ul>
                         <li ng-repeat="track in trackList.tracks">
-                            <span class="btn-play" ng-click="addToPlaylist(track)"></span>
-                            <span class="btn-play" ng-click="player.play(track)" ng-hide="track.id == player.track.id && player.isPlaying"></span>
+                            <span class="btn-add" ng-click="addToPlaylist(track)" title="Add to playlist"></span>
+                            <span class="btn-play" ng-click="player.play(trackList.originalTrackList, track)" ng-hide="track.id == player.track.id && player.isPlaying"></span>
                             <span class="btn-pause" ng-click="player.pause()" ng-show="track.id == player.track.id && player.isPlaying"></span>
                             <span class="track-index">{{trackList.pageIndex*10 + $index + 1}}</span>
                             <span class="track-title">{{track.title}} - {{track.user.username}} - {{getTrackDuration(track.duration)}}</span>
@@ -95,6 +102,7 @@
     <script src="app.js"></script>
     <script src="services/stringCutFilter.js"></script>
     <script src="services/anchorSmoothScrollService.js"></script>
+    <script src="ui-bootstrap-tpls-2.4.0.min.js"></script>
 </body>
 
 </html>

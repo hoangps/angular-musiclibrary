@@ -26,6 +26,16 @@ body {
     }
 }
 
+.main-content > div {
+    position: relative;
+}
+
+.alert-wrapper {
+    position: absolute;
+    width: 100%;
+    z-index: 99;
+}
+
 .profile-stats {
     padding-left: 25px;
 }
@@ -102,9 +112,20 @@ label.profile-name {
     vertical-align: super;
 }
 
-.track-list ul li .btn-play:hover, .track-list ul li .btn-pause:hover {
+.track-list ul li .btn-play:hover, .track-list ul li .btn-pause:hover, .track-list ul li .btn-add:hover, .track-list ul li .btn-delete:hover {
     cursor: pointer
 }
+
+.track-list ul li .btn-play:hover{
+    background: url(img/btn-play-active.png) no-repeat;
+}
+.track-list ul li .btn-add:hover{
+    background: url(img/btn-add-active.png) no-repeat;
+}
+.track-list ul li .btn-delete:hover{
+    background: url(img/btn-delete-active.png) no-repeat;
+}
+
 
 .track-list ul li .track-title {
     display: inline-block;

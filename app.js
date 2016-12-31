@@ -1,9 +1,11 @@
-var myApp = angular.module('myApp', ['ngStorage']);
+var myApp = angular.module('myApp', ['ngStorage','ui.bootstrap']);
 
 myApp.controller('mainController', function ($scope, $http, $location, anchorSmoothScroll, $interval, $localStorage) {
 
     var CLIENT_ID = "024ef57272dc29f756343109fc30c1a5";
     var PAGE_SIZE = 10;
+
+    $scope.alerts = [];
 
     $scope.player = {};
     $scope.player.audio = new Audio();
@@ -16,7 +18,6 @@ myApp.controller('mainController', function ($scope, $http, $location, anchorSmo
 
     $scope.showLibrary = true;
     $scope.library = {};
-    $scope.library.playlists = [];
 
     $scope.search = {};
     $scope.search.resource = "track";
@@ -44,6 +45,8 @@ myApp.controller('mainController', function ($scope, $http, $location, anchorSmo
 
         getUserProfile(user.id);
         $scope.profileSelected = true;
+
+        $scope.hideLibrary();
     }
 
     $scope.selectTrack = function (track) {
@@ -71,13 +74,11 @@ myApp.controller('mainController', function ($scope, $http, $location, anchorSmo
             }
 
             initPlayList(res.data, listName);
+            anchorSmoothScroll.scrollTo("track-list");
         });
-
-        anchorSmoothScroll.scrollTo("track-list");
-
     }
 
-    $scope.player.play = function (track) {
+    $scope.player.play = function (playlist, track) {
         // check if resume
         if (track.id == $scope.player.track.id) {
             $scope.player.audio.currentTime = $scope.player.currentTime;
@@ -85,7 +86,8 @@ myApp.controller('mainController', function ($scope, $http, $location, anchorSmo
             $scope.player.audio.play();
             startTrackTick();
         } else {
-            $scope.player.playlist = $scope.trackList.originalTrackList;
+            // $scope.player.playlist = $scope.trackList.originalTrackList;
+            $scope.player.playlist = playlist;
             playTrack(track);
         }
     }
@@ -171,13 +173,13 @@ myApp.controller('mainController', function ($scope, $http, $location, anchorSmo
         }
     }
 
-    $scope.goPage = function (pageIndex) {
+    $scope.goPage = function (pageIndex, playlist) {
         pageIndex = parseInt(pageIndex);
         if (pageIndex < 0) pageIndex = 0;
-        if (pageIndex > $scope.trackList.pageCount - 1) pageIndex = $scope.trackList.pageCount - 1;
+        if (pageIndex > playlist.pageCount - 1) pageIndex = playlist.pageCount - 1;
 
-        $scope.trackList.tracks = $scope.trackList.originalTrackList.slice(PAGE_SIZE * pageIndex, PAGE_SIZE * pageIndex + PAGE_SIZE);
-        $scope.trackList.pageIndex = pageIndex;
+        playlist.tracks = playlist.originalTrackList.slice(PAGE_SIZE * pageIndex, PAGE_SIZE * pageIndex + PAGE_SIZE);
+        playlist.pageIndex = pageIndex;
     }
 
     $scope.getTrackDuration = function (time) {
@@ -221,68 +223,115 @@ myApp.controller('mainController', function ($scope, $http, $location, anchorSmo
         else
             $scope.trackList.tracks = fullTrackList;
 
-        getPagination(PAGE_SIZE, fullTrackList.length);
+        // getPagination(PAGE_SIZE, fullTrackList.length);
+        $scope.trackList.pageCount = getPageCount(PAGE_SIZE, fullTrackList.length);
     }
 
-    var getPagination = function (pageSize, dataLength) {
-        $scope.trackList.pageCount = dataLength % pageSize == 0 ? dataLength / pageSize : parseInt(dataLength / pageSize) + 1;
+    var getPageCount = function (pageSize, dataLength) {
+        return dataLength % pageSize == 0 ? dataLength / pageSize : parseInt(dataLength / pageSize) + 1;
     }
 
     $scope.addToPlaylist = function (track) {
-        if ($scope.library.playlists[0] == undefined) {
-            $scope.library.playlists[0] = [];
+        var playlist = $scope.library.playlists[0]; // default playlist for now
+
+        isDuplicated = false;
+        for(var i=0; i<playlist.originalTrackList.length; i++){
+            if(track.id == playlist.originalTrackList[i].id){
+                isDuplicated = true;
+                break;
+            }
         }
 
-        $scope.library.playlists[0].push(track);
-        $localStorage.library = $scope.library;
+        if(isDuplicated) {
+            $scope.addAlert('danger', track.title + " is already in your playlist.");
+            return;
+        }
+
+        playlist.originalTrackList.push(track);
+
+        $scope.addAlert('success', track.title + " has been added to your playlist.");
+        reloadPlaylist(playlist);
+    }
+
+    $scope.removeFromPlaylist = function(trackIndex){
+        var playlist = $scope.library.playlists[0]; // default playlist for now
+
+        //if(playlist == undefined) return;
+
+        var track = playlist.originalTrackList[trackIndex];
+
+        if($scope.player.track.id == track.id){
+            $scope.player.pause();
+        }
+
+        playlist.originalTrackList.splice(trackIndex, 1);
+
+        $scope.addAlert('success', track.title + " has been removed from your playlist.");
+        reloadPlaylist(playlist);
+    }
+
+    var reloadPlaylist = function(playlist){
+        if(playlist.length == 0) 
+            return;
+
+        playlist.pageCount = getPageCount(PAGE_SIZE, playlist.originalTrackList.length);
+
+        if (playlist.originalTrackList.length > PAGE_SIZE)
+            playlist.tracks = playlist.originalTrackList.slice(playlist.pageIndex*PAGE_SIZE, (playlist.pageIndex + 1) * PAGE_SIZE);
+        else
+            playlist.tracks = playlist.originalTrackList;
+
+        $scope.library.playlists[0] = playlist;
+        $scope.player.playlist = playlist.originalTrackList;
+
+        if(playlist.pageIndex >= playlist.pageCount){
+            playlist.pageIndex -= 1;
+        }
+
+        $scope.saveLibrary();
     }
 
     $scope.displayLibrary = function(){
         $scope.showLibrary = true;
     }
+
     $scope.hideLibrary = function(){
         $scope.showLibrary = false;
+    }
+
+    $scope.saveLibrary = function(){
+        $localStorage.library = $scope.library;
     }
 
     var initLibrary = function () {
         $scope.library = $localStorage.library || {};
         $scope.library.playlists = $scope.library.playlists || [];
+
+        var playlist = $scope.library.playlists[0];
+        if(playlist == undefined){
+            playlist = {};
+            playlist.tracks = [];
+            playlist.originalTrackList = [];
+            playlist.pageIndex = 0;
+            playlist.pageCount = 0;
+        }
+
+        reloadPlaylist(playlist);
     }
 
     initLibrary();
 
-    // $scope.showAdvanced = function (ev) {
-    //     $mdDialog.show({
-    //             locals: { data: $scope.library.playlists },
-    //             controller: DialogController,
-    //             templateUrl: 'dialog1.tmpl.html',
-    //             parent: angular.element(document.body),
-    //             targetEvent: ev,
-    //             clickOutsideToClose: true,
-    //             fullscreen: $scope.customFullscreen // Only for -xs, -sm breakpoints.
-    //         })
-    //         .then(function (answer) {
-    //             $scope.status = 'You said the information was "' + answer + '".';
-    //         }, function () {
-    //             $scope.status = 'You cancelled the dialog.';
-    //         });
-    // };
+    $scope.addAlert = function(type, message) {
+        if($scope.alerts.length > 2){
+            $scope.alerts.splice(0, $scope.alerts.length-2);
+        }
 
-    // function DialogController($scope, $mdDialog, data) {
-    //     $scope.playlists = data;
+        $scope.alerts.push({type: type, msg: message});
+    };
 
-    //     $scope.hide = function () {
-    //         $mdDialog.hide();
-    //     };
-
-    //     $scope.cancel = function () {
-    //         $mdDialog.cancel();
-    //     };
-
-    //     $scope.answer = function (answer) {
-    //         $mdDialog.hide(answer);
-    //     };
-    // }
+    $scope.closeAlert = function(index) {
+        $scope.alerts.splice(index, 1);
+    };
 });
 
 myApp.directive('search', function () {
@@ -311,6 +360,13 @@ myApp.directive('search', function () {
             restrict: 'E',
             replace: true,
             templateUrl: 'templates/pagination.html'
+        };
+    })
+    .directive('libraryPagination', function () {
+        return {
+            restrict: 'E',
+            replace: true,
+            templateUrl: 'templates/library-pagination.html'
         };
     })
     .directive('footerMusicPlayer', function () {

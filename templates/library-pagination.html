@@ -1,0 +1,11 @@
+
+<div class="text-center">
+    <div class="pagination" ng-show="library.playlists[0].pageCount > 1">
+        <span class="btn btn-default" ng-click="goPage(0, library.playlists[0])"><<</span>
+        <span class="btn btn-default" ng-click="goPage(library.playlists[0].pageIndex-1, library.playlists[0])"><</span>
+        <span class="current-page control-label">Page {{library.playlists[0].pageIndex + 1}} of {{library.playlists[0].pageCount}}</span>
+        <span class="btn btn-default" ng-click="goPage(library.playlists[0].pageIndex+1, library.playlists[0])">></span>
+        <span class="btn btn-default" ng-click="goPage(library.playlists[0].pageCount-1, library.playlists[0])">>></span>
+    </div>
+    <div class="notice"><span><i>(*) Some tracks may not be available for public access. </i></span></div>
+</div>

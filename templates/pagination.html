@@ -1,11 +1,11 @@
 
 <div class="text-center">
     <div class="pagination" ng-show="trackList.pageCount > 1">
-        <span class="btn btn-default" ng-click="goPage(0)" ng-disabled="trackList.pageIndex < 2"><<</span>
-        <span class="btn btn-default" ng-click="goPage(trackList.pageIndex-1)"  ng-disabled="trackList.pageIndex < 1"><</span>
+        <span class="btn btn-default" ng-click="goPage(0, trackList)"><<</span>
+        <span class="btn btn-default" ng-click="goPage(trackList.pageIndex-1, trackList)"><</span>
         <span class="current-page control-label">Page {{trackList.pageIndex + 1}} of {{trackList.pageCount}}</span>
-        <span class="btn btn-default" ng-click="goPage(trackList.pageIndex+1)" ng-disabled="trackList.pageIndex > trackList.pageCount-2">></span>
-        <span class="btn btn-default" ng-click="goPage(trackList.pageCount-1)" ng-disabled="trackList.pageIndex > trackList.pageCount-3">>></span>
+        <span class="btn btn-default" ng-click="goPage(trackList.pageIndex+1, trackList)">></span>
+        <span class="btn btn-default" ng-click="goPage(trackList.pageCount-1, trackList)">>></span>
     </div>
     <div class="notice"><span><i>(*) Some tracks may not be available for public acess. </i></span></div>
 </div>
