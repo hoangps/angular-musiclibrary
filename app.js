@@ -1,20 +1,14 @@
-var myApp = angular.module('myApp', ['ngStorage','ui.bootstrap']);
+var myApp = angular.module('myApp', ['ngStorage','ui.bootstrap', 'angularMusicPlayer']);
 
-myApp.controller('mainController', function ($scope, $http, $location, anchorSmoothScroll, $interval, $localStorage) {
+myApp.controller('mainController', function ($scope, $http, $location, anchorSmoothScroll, $interval, $localStorage, $musicPlayer) {
+
 
     var CLIENT_ID = "024ef57272dc29f756343109fc30c1a5";
     var PAGE_SIZE = 10;
 
     $scope.alerts = [];
 
-    $scope.player = {};
-    $scope.player.audio = new Audio();
-    $scope.player.isPlaying = false;
-    $scope.player.currentTime = 0;
-    $scope.player.track = {};
-    $scope.player.playlist = [];
-    $scope.player.trackElapsedPercentage = 0;
-    $scope.player.trackElapsedPercentageStyle = { 'width': 0 };
+    $scope.player = $musicPlayer;
 
     $scope.showLibrary = true;
     $scope.library = {};
@@ -29,8 +23,6 @@ myApp.controller('mainController', function ($scope, $http, $location, anchorSmo
 
     $scope.playlists = [];
     $scope.trackList = {};
-    //$scope.trackList.listType = "";
-    //$scope.trackList.listName = "";
     $scope.trackList.originalTrackList = [];
     $scope.trackList.tracks = [];
     $scope.trackList.pageIndex = 0;
@@ -113,115 +105,6 @@ myApp.controller('mainController', function ($scope, $http, $location, anchorSmo
         });
     }
 
-    // $scope.showProfile = function(user){
-    //     getUserProfile(user.id);
-    // }
-
-    $scope.player.play = function (playlist, track) {
-        // check if resume
-        if (track.id == $scope.player.track.id) {
-            // $scope.player.audio.currentTime = $scope.player.currentTime;
-            // $scope.player.isPlaying = true;
-            // $scope.player.audio.play();
-            // startTrackTick($scope.player);
-            $scope.player.resume();
-        } else {
-            // $scope.player.playlist = $scope.trackList.originalTrackList;
-            $scope.player.playlist = playlist;
-            playTrack(track);
-        }
-    }
-
-    $scope.player.resume = function(){
-        $scope.player.audio.currentTime = $scope.player.currentTime;
-        $scope.player.isPlaying = true;
-        $scope.player.audio.play();
-        startTrackTick($scope.player);
-    }
-
-    $scope.player.pause = function () {
-        $scope.player.currentTime = $scope.player.audio.currentTime;
-        $scope.player.audio.pause();
-        $scope.player.isPlaying = false;
-
-        stopTrackTick();
-    }
-
-    $scope.player.prev = function () {
-        var nextTrackIndex = $scope.player.playlist.indexOf($scope.player.track) - 1;
-        goToTrack(nextTrackIndex);
-    }
-
-    $scope.player.next = function () {
-        var nextTrackIndex = $scope.player.playlist.indexOf($scope.player.track) + 1;
-        goToTrack(nextTrackIndex);
-    }
-
-    $scope.player.audio.addEventListener('ended', function () {
-        var nextTrackIndex = $scope.player.playlist.indexOf($scope.player.track) + 1;
-        goToTrack(nextTrackIndex);
-        $scope.$apply();
-    });
-
-    var getTrackCurrentPercent = function (player) {
-        var currentTime = player.audio.currentTime;
-        var totalTime = player.audio.duration;
-
-        if(isNaN(totalTime)) return;
-
-        player.trackElapsedPercentage = parseInt(currentTime * 100 / totalTime);
-        player.trackElapsedPercentageStyle = {
-            "width": (currentTime * 100 / totalTime).toFixed(2) + "%"
-        };
-    }
-
-    var tick;
-
-    var startTrackTick = function (player) {
-        if (angular.isDefined(tick)) return;
-        tick = $interval(function () {
-            getTrackCurrentPercent(player);
-        }, 100);
-    }
-
-    var stopTrackTick = function () {
-        if (angular.isDefined(tick)) {
-            $interval.cancel(tick);
-            tick = undefined;
-        }
-    }
-
-    var goToTrack = function (trackIndex) {
-        if (trackIndex >= $scope.player.playlist.length) trackIndex = 0;
-        if (trackIndex < 0) trackIndex = $scope.player.playlist.length - 1;
-
-        var nextTrack = $scope.player.playlist[trackIndex];
-
-        playTrack(nextTrack);
-    }
-
-    var playTrack = function (track) {
-        stopTrackTick();
-
-        if (track.kind == "playlist") {
-            $scope.player.playlist = track.tracks;
-            $scope.player.track = track.tracks[0];
-        } else {
-            $scope.player.track = track;
-        }
-
-        if (!$scope.player.track.streamable) {
-            if ($scope.player.playlist.length > 1)
-                $scope.player.next();
-        } else {
-            $scope.player.audio.src = $scope.player.track.stream_url;
-            $scope.player.audio.play();
-            $scope.player.isPlaying = true;
-
-            startTrackTick($scope.player);
-        }
-    }
-
     $scope.goPage = function (pageIndex, playlist) {
         pageIndex = parseInt(pageIndex);
         if (pageIndex < 0) pageIndex = 0;
@@ -262,6 +145,12 @@ myApp.controller('mainController', function ($scope, $http, $location, anchorSmo
             $scope.userProfile = res.data;
         });
     }
+
+    $scope.player.audio.addEventListener('ended', function () {
+        var nextTrackIndex = $scope.player.playlist.indexOf($scope.player.track) + 1;
+        $scope.player.goToTrack(nextTrackIndex);
+        $scope.$apply();
+    });
 
     var initPlayList = function (fullTrackList, listName) {
         $scope.trackList.listName = listName;
