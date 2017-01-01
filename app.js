@@ -89,10 +89,17 @@ myApp.controller('mainController', function ($scope, $http, $location, anchorSmo
 
             for (var i = 0; i < res.data.length; i++) {
                 if (res.data[i].kind == "playlist") {
-                    for (var j = 0; j < res.data[i].tracks.length; j++)
+                    for (var j = 0; j < res.data[i].tracks.length; j++){
                         res.data[i].tracks[j].stream_url = res.data[i].tracks[j].stream_url + "?client_id=" + CLIENT_ID;
-                } else
+                        if(!res.data[i].tracks[j].artwork_url)
+                            res.data[i].tracks[j].artwork_url = "img/default-artwork.png";
+                    }
+                } else{
                     res.data[i].stream_url = res.data[i].stream_url + "?client_id=" + CLIENT_ID;
+                }
+
+                if(!res.data[i].artwork_url)
+                    res.data[i].artwork_url = "img/default-artwork.png";
             }
 
             //$scope.trackList.listType = listType;

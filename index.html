@@ -46,6 +46,7 @@
                             <span class="btn-delete" ng-click="removeFromPlaylist(library.playlists[0].pageIndex*10 + $index)" title="Remove from playlist"></span>
                             <span class="btn-play" ng-click="player.play(library.playlists[0].originalTrackList, track)" ng-hide="track.id == player.track.id && player.isPlaying"></span>
                             <span class="btn-pause" ng-click="player.pause()" ng-show="track.id == player.track.id && player.isPlaying"></span>
+                            <span><img ng-src="{{track.artwork_url}}" alt="{{track.title}}" class="artwork"/></span>
                             <span class="track-title">{{library.playlists[0].pageIndex*10 + $index + 1}}. <a href="javascript:void(0);" ng-click="selectProfile(track.user)">{{ !track.user.full_name ? track.user.username : track.user.full_name }}</a> - {{track.title}} - {{getTrackDuration(track.duration)}}</span>
                         </li>
                     </ul>
@@ -81,6 +82,7 @@
                             <li ng-repeat="playlist in playlists">
                                 <span class="btn-play" ng-click="selectPlaylist(playlist)" ng-hide="playlist.id == selectedPlaylistId && player.isPlaying"></span>
                                 <span class="btn-pause" ng-click="player.pause()" ng-show="playlist.id == selectedPlaylistId && player.isPlaying"></span>
+                                <span><img ng-src="{{playlist.artwork_url}}" alt="{{playlist.title}}" class="artwork"/></span>
                                 <span class="track-title">{{$index + 1}}. <strong>{{playlist.title}}</strong> - {{playlist.tracks.length}} tracks - {{getTrackDuration(playlist.duration)}}</span>
                             </li>
                         </ul>
@@ -94,6 +96,7 @@
                             <span class="btn-play" ng-click="player.play(trackList.originalTrackList, track)" ng-hide="track.id == player.track.id && player.isPlaying"></span>
                             <span class="btn-pause" ng-click="player.pause()" ng-show="track.id == player.track.id && player.isPlaying"></span>
                             <!--<span class="track-index">{{trackList.pageIndex*10 + $index + 1}}</span>-->
+                            <span><img ng-src="{{track.artwork_url}}" alt="{{track.title}}" class="artwork"/></span>
                             <span class="track-title">{{trackList.pageIndex*10 + $index + 1}}. <a href="javascript:void(0);" ng-click="selectProfile(track.user)">{{ !track.user.full_name ? track.user.username : track.user.full_name }}</a> - {{track.title}} - {{getTrackDuration(track.duration)}}</span>
                         </li>
                     </ul>

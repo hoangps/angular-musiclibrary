@@ -151,7 +151,7 @@ label.profile-name {
     display: inline-block;
     vertical-align: 10px;
     padding-left: 10px;
-    max-width: 75%;
+    max-width: 67%;
 }
 
 .track-list ul li .track-title a {
@@ -163,10 +163,28 @@ label.profile-name {
     color: #f49242;
 }
 
+@media screen and (max-width: 767px) {
+    .track-list ul li .track-title {
+        max-width: 60%;
+    }
+}
+
 @media screen and (max-width: 480px) {
     .track-list ul li .track-title {
         max-width: 69%;
     }
+}
+
+.track-list ul li .artwork {
+    display: inline-block;
+    vertical-align: 5px;
+    padding-left: 10px;
+    max-width: 40px;
+    max-height: 30px;
+}
+
+@media screen and (max-width: 480px) {
+    .track-list ul li .artwork {display: none;}
 }
 
 .pagination .current-page {padding: 5px}
