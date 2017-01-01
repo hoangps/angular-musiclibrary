@@ -16,7 +16,7 @@
                     </div>
                     <span class="track-length col-md-1 col-sm-2">{{getTrackDuration(player.track.duration)}}</span>
                 </div>
-                <div class="track-info col-md-2 hidden-sm">
+                <div class="track-info col-md-2 hidden-sm"></div>
                     <span class="track-title">{{player.track.title | cut:true:50:'...'}}</span>
                     <span class="track-artist">{{(!player.track.user.full_name ? player.track.user.username : player.track.user.full_name) | cut:true:30:'...'}}</span>
                 </div>

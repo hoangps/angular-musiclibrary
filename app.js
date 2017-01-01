@@ -27,14 +27,19 @@ myApp.controller('mainController', function ($scope, $http, $location, anchorSmo
     $scope.profileSelected = false;
     $scope.userProfile = "";
 
+    $scope.playlists = [];
     $scope.trackList = {};
-    $scope.trackList.listType = "";
-    $scope.trackList.listName = "";
+    //$scope.trackList.listType = "";
+    //$scope.trackList.listName = "";
     $scope.trackList.originalTrackList = [];
     $scope.trackList.tracks = [];
     $scope.trackList.pageIndex = 0;
     $scope.trackList.pageCount = 0;
-    $scope.trackList.showTrackList = false;
+
+    $scope.showTrackList = false;
+    $scope.selectedListType = "";
+    $scope.selectedListName = "";
+    $scope.selectedPlaylistId = "";
 
     // Module Event Handlers
     $scope.search = function (resource) {
@@ -60,7 +65,22 @@ myApp.controller('mainController', function ($scope, $http, $location, anchorSmo
         initPlayList([track], "Track");
     }
 
+    $scope.selectPlaylist = function(playlist){
+        if($scope.selectedPlaylistId == playlist.id) { // check if resume
+            $scope.player.resume();
+            return;
+        }
+
+        $scope.selectedPlaylistId = playlist.id;
+        $scope.showTrackList = true;
+
+        initPlayList(playlist.tracks, playlist.title);
+    }
+
     $scope.showList = function (listType, listName) {
+
+        $scope.selectedListType = listType;
+        $scope.selectedListName = listName;
 
         $http({
             method: 'GET',
@@ -75,25 +95,41 @@ myApp.controller('mainController', function ($scope, $http, $location, anchorSmo
                     res.data[i].stream_url = res.data[i].stream_url + "?client_id=" + CLIENT_ID;
             }
 
-            $scope.trackList.listType = listType;
-            $scope.trackList.showTrackList = true;
-            initPlayList(res.data, listName);
-            anchorSmoothScroll.scrollTo("track-list");
+            //$scope.trackList.listType = listType;
+            if($scope.selectedListType == 'playlists'){
+                $scope.playlists = res.data;
+            } else {
+                $scope.showTrackList = true;
+                initPlayList(res.data, listName);
+                anchorSmoothScroll.scrollTo("track-list");
+            }
         });
     }
+
+    // $scope.showProfile = function(user){
+    //     getUserProfile(user.id);
+    // }
 
     $scope.player.play = function (playlist, track) {
         // check if resume
         if (track.id == $scope.player.track.id) {
-            $scope.player.audio.currentTime = $scope.player.currentTime;
-            $scope.player.isPlaying = true;
-            $scope.player.audio.play();
-            startTrackTick();
+            // $scope.player.audio.currentTime = $scope.player.currentTime;
+            // $scope.player.isPlaying = true;
+            // $scope.player.audio.play();
+            // startTrackTick($scope.player);
+            $scope.player.resume();
         } else {
             // $scope.player.playlist = $scope.trackList.originalTrackList;
             $scope.player.playlist = playlist;
             playTrack(track);
         }
+    }
+
+    $scope.player.resume = function(){
+        $scope.player.audio.currentTime = $scope.player.currentTime;
+        $scope.player.isPlaying = true;
+        $scope.player.audio.play();
+        startTrackTick($scope.player);
     }
 
     $scope.player.pause = function () {
@@ -120,22 +156,24 @@ myApp.controller('mainController', function ($scope, $http, $location, anchorSmo
         $scope.$apply();
     });
 
-    $scope.getTrackCurrentPercent = function () {
-        var currentTime = $scope.player.audio.currentTime;
-        var totalTime = $scope.player.audio.duration;
+    var getTrackCurrentPercent = function (player) {
+        var currentTime = player.audio.currentTime;
+        var totalTime = player.audio.duration;
 
-        $scope.player.trackElapsedPercentage = parseInt(currentTime * 100 / totalTime);
-        $scope.player.trackElapsedPercentageStyle = {
+        if(isNaN(totalTime)) return;
+
+        player.trackElapsedPercentage = parseInt(currentTime * 100 / totalTime);
+        player.trackElapsedPercentageStyle = {
             "width": (currentTime * 100 / totalTime).toFixed(2) + "%"
         };
     }
 
     var tick;
 
-    var startTrackTick = function () {
+    var startTrackTick = function (player) {
         if (angular.isDefined(tick)) return;
         tick = $interval(function () {
-            $scope.getTrackCurrentPercent();
+            getTrackCurrentPercent(player);
         }, 100);
     }
 
@@ -173,7 +211,7 @@ myApp.controller('mainController', function ($scope, $http, $location, anchorSmo
             $scope.player.audio.play();
             $scope.player.isPlaying = true;
 
-            startTrackTick();
+            startTrackTick($scope.player);
         }
     }
 

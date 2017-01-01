@@ -46,8 +46,7 @@
                             <span class="btn-delete" ng-click="removeFromPlaylist(library.playlists[0].pageIndex*10 + $index)" title="Remove from playlist"></span>
                             <span class="btn-play" ng-click="player.play(library.playlists[0].originalTrackList, track)" ng-hide="track.id == player.track.id && player.isPlaying"></span>
                             <span class="btn-pause" ng-click="player.pause()" ng-show="track.id == player.track.id && player.isPlaying"></span>
-                            <span class="track-index">{{library.playlists[0].pageIndex*10 + $index + 1}}</span>
-                            <span class="track-title">{{track.title}} - {{track.user.username}} - {{getTrackDuration(track.duration)}}</span>
+                            <span class="track-title">{{library.playlists[0].pageIndex*10 + $index + 1}}. <a href="javascript:void(0);" ng-click="selectProfile(track.user)">{{ !track.user.full_name ? track.user.username : track.user.full_name }}</a> - {{track.title}} - {{getTrackDuration(track.duration)}}</span>
                         </li>
                     </ul>
                     <library-pagination></library-pagination>
@@ -76,28 +75,26 @@
                         <input type="button" class="btn btn-default" value="View details" ng-click="showList('favorites', 'Likes')"></input>
                         <label class="profile-stats"><strong>Favorites: </strong>{{ userProfile.public_favorites_count }}</label>
                     </div>
-                    <div class="user-playlists" ng-show="trackList.listType == 'playlist'">
+                    <div class="user-playlists track-list" ng-show="selectedListType == 'playlists'">
                         <h3>Playlists</h3>
                         <ul>
-                            <li ng-repeat="track in trackList.tracks">
-                                <span class="btn-add" ng-click="addToPlaylist(track)" title="Add to playlist"></span>
-                                <span class="btn-play" ng-click="player.play(trackList.originalTrackList, track)" ng-hide="track.id == player.track.id && player.isPlaying"></span>
-                                <span class="btn-pause" ng-click="player.pause()" ng-show="track.id == player.track.id && player.isPlaying"></span>
-                                <!--<span class="track-index">{{trackList.pageIndex*10 + $index + 1}}</span>-->
-                                <span class="track-title">{{trackList.pageIndex*10 + $index + 1}}. {{track.title}} - {{track.user.username}} - {{getTrackDuration(track.duration)}}</span>
+                            <li ng-repeat="playlist in playlists">
+                                <span class="btn-play" ng-click="selectPlaylist(playlist)" ng-hide="playlist.id == selectedPlaylistId && player.isPlaying"></span>
+                                <span class="btn-pause" ng-click="player.pause()" ng-show="playlist.id == selectedPlaylistId && player.isPlaying"></span>
+                                <span class="track-title">{{$index + 1}}. <strong>{{playlist.title}}</strong> - {{playlist.tracks.length}} tracks - {{getTrackDuration(playlist.duration)}}</span>
                             </li>
                         </ul>
                     </div>
                 </div>
                 <div id="track-list" class="track-list col-md-6" ng-show="trackList.tracks.length > 0">
-                    <h2>{{trackList.listName}}</h2>
+                    <h3>{{trackList.listName}}</h3>
                     <ul>
                         <li ng-repeat="track in trackList.tracks">
                             <span class="btn-add" ng-click="addToPlaylist(track)" title="Add to playlist"></span>
                             <span class="btn-play" ng-click="player.play(trackList.originalTrackList, track)" ng-hide="track.id == player.track.id && player.isPlaying"></span>
                             <span class="btn-pause" ng-click="player.pause()" ng-show="track.id == player.track.id && player.isPlaying"></span>
                             <!--<span class="track-index">{{trackList.pageIndex*10 + $index + 1}}</span>-->
-                            <span class="track-title">{{trackList.pageIndex*10 + $index + 1}}. {{track.title}} - {{track.user.username}} - {{getTrackDuration(track.duration)}}</span>
+                            <span class="track-title">{{trackList.pageIndex*10 + $index + 1}}. <a href="javascript:void(0);" ng-click="selectProfile(track.user)">{{ !track.user.full_name ? track.user.username : track.user.full_name }}</a> - {{track.title}} - {{getTrackDuration(track.duration)}}</span>
                         </li>
                     </ul>
                     <pagination></pagination>

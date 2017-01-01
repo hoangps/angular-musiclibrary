@@ -154,6 +154,15 @@ label.profile-name {
     max-width: 75%;
 }
 
+.track-list ul li .track-title a {
+    text-decoration: none;
+    color: #f49242
+}
+.track-list ul li .track-title a:hover, .track-list ul li .track-title a:focus {
+    text-decoration: none;
+    color: #f49242;
+}
+
 @media screen and (max-width: 480px) {
     .track-list ul li .track-title {
         max-width: 69%;
