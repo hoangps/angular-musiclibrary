@@ -337,6 +337,11 @@ myApp.controller('mainController', function ($scope, $http, $location, anchorSmo
             playlist.pageIndex -= 1;
         }
 
+        for(var i=0; i<playlist.originalTrackList.length; i++){
+            if(!playlist.originalTrackList[i].artwork_url)
+                playlist.originalTrackList[i].artwork_url = "img/default-artwork.png";
+        }
+
         $scope.saveLibrary();
     }
 
