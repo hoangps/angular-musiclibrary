@@ -36,6 +36,26 @@ body {
     z-index: 99;
 }
 
+@media screen and (max-width: 991px) {
+    .alert-wrapper {
+        position: fixed;
+        width: auto;
+        top: 40px;
+        left: 15%;
+        right: 15%;
+    }
+}
+
+@media screen and (max-width: 767px) {
+    .alert-wrapper {
+        position: fixed;
+        width: auto;
+        top: 40px;
+        left: 20px;
+        right: 20px;
+    }
+}
+
 .profile-stats {
     padding-left: 25px;
 }
@@ -134,12 +154,33 @@ label.profile-name {
     max-width: 75%;
 }
 
+@media screen and (max-width: 480px) {
+    .track-list ul li .track-title {
+        max-width: 69%;
+    }
+}
+
 .pagination .current-page {padding: 5px}
 .notice {font-size: 12px;}
 
 .stats {
 	position: fixed;
     bottom: 0px;
+    width: 100%;
+}
+
+.stats .credits {
+    position: absolute;
+    right: 10px;
+    bottom: 0px;
+    font-size: 12px;
+}
+
+.stats .credits a {
+    color: #f49242
+}
+.stats .credits a:hover,.stats .credits a:focus {
+    text-decoration: none;
 }
 
 footer {    

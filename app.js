@@ -28,11 +28,13 @@ myApp.controller('mainController', function ($scope, $http, $location, anchorSmo
     $scope.userProfile = "";
 
     $scope.trackList = {};
+    $scope.trackList.listType = "";
     $scope.trackList.listName = "";
     $scope.trackList.originalTrackList = [];
     $scope.trackList.tracks = [];
     $scope.trackList.pageIndex = 0;
     $scope.trackList.pageCount = 0;
+    $scope.trackList.showTrackList = false;
 
     // Module Event Handlers
     $scope.search = function (resource) {
@@ -73,6 +75,8 @@ myApp.controller('mainController', function ($scope, $http, $location, anchorSmo
                     res.data[i].stream_url = res.data[i].stream_url + "?client_id=" + CLIENT_ID;
             }
 
+            $scope.trackList.listType = listType;
+            $scope.trackList.showTrackList = true;
             initPlayList(res.data, listName);
             anchorSmoothScroll.scrollTo("track-list");
         });
@@ -284,7 +288,7 @@ myApp.controller('mainController', function ($scope, $http, $location, anchorSmo
         $scope.library.playlists[0] = playlist;
         $scope.player.playlist = playlist.originalTrackList;
 
-        if(playlist.pageIndex >= playlist.pageCount){
+        if(playlist.pageIndex >= playlist.pageCount && playlist.pageCount > 0){
             playlist.pageIndex -= 1;
         }
 

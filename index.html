@@ -5,6 +5,9 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="hoangps, hoang, phan,hoangphan, music library,music,soundcloud">
+    <meta name="description" content="A handful music player application for web. Provide library functionality.">
+    <meta name="author" content="Hoang Phan">
     <title>My Music Library | HoangPS</title>
     <link rel="icon" href="favicon.png">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
@@ -73,6 +76,18 @@
                         <input type="button" class="btn btn-default" value="View details" ng-click="showList('favorites', 'Likes')"></input>
                         <label class="profile-stats"><strong>Favorites: </strong>{{ userProfile.public_favorites_count }}</label>
                     </div>
+                    <div class="user-playlists" ng-show="trackList.listType == 'playlist'">
+                        <h3>Playlists</h3>
+                        <ul>
+                            <li ng-repeat="track in trackList.tracks">
+                                <span class="btn-add" ng-click="addToPlaylist(track)" title="Add to playlist"></span>
+                                <span class="btn-play" ng-click="player.play(trackList.originalTrackList, track)" ng-hide="track.id == player.track.id && player.isPlaying"></span>
+                                <span class="btn-pause" ng-click="player.pause()" ng-show="track.id == player.track.id && player.isPlaying"></span>
+                                <!--<span class="track-index">{{trackList.pageIndex*10 + $index + 1}}</span>-->
+                                <span class="track-title">{{trackList.pageIndex*10 + $index + 1}}. {{track.title}} - {{track.user.username}} - {{getTrackDuration(track.duration)}}</span>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
                 <div id="track-list" class="track-list col-md-6" ng-show="trackList.tracks.length > 0">
                     <h2>{{trackList.listName}}</h2>
@@ -81,8 +96,8 @@
                             <span class="btn-add" ng-click="addToPlaylist(track)" title="Add to playlist"></span>
                             <span class="btn-play" ng-click="player.play(trackList.originalTrackList, track)" ng-hide="track.id == player.track.id && player.isPlaying"></span>
                             <span class="btn-pause" ng-click="player.pause()" ng-show="track.id == player.track.id && player.isPlaying"></span>
-                            <span class="track-index">{{trackList.pageIndex*10 + $index + 1}}</span>
-                            <span class="track-title">{{track.title}} - {{track.user.username}} - {{getTrackDuration(track.duration)}}</span>
+                            <!--<span class="track-index">{{trackList.pageIndex*10 + $index + 1}}</span>-->
+                            <span class="track-title">{{trackList.pageIndex*10 + $index + 1}}. {{track.title}} - {{track.user.username}} - {{getTrackDuration(track.duration)}}</span>
                         </li>
                     </ul>
                     <pagination></pagination>
@@ -91,7 +106,12 @@
         </div>
     </div>
 	<div class="stats">
-		<a title="web stats" href="http://statcounter.com/" target="_blank"><img src="//c.statcounter.com/11203517/0/57cc8636/0/" alt="web stats" style="border:none;"></a>
+        <div class="left">
+		    <a title="web stats" href="http://statcounter.com/" target="_blank"><img src="//c.statcounter.com/11203517/0/57cc8636/0/" alt="web stats" style="border:none;"></a>
+        </div>
+        <div class="right">
+            <span class="credits">Developed by <a href="https://facebook.com/pshoang" target="_blank">HoangPS</a></span>
+        </div>
 	</div>
     <footer-music-player></footer-music-player>
 
