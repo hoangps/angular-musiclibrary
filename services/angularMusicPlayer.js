@@ -95,25 +95,15 @@ angular.module('angularMusicPlayer', [])
     var playTrack = function (player, track) {
         stopTrackTick();
 
-        if (track.kind == "playlist") {
-            player.playlist = track.tracks;
-            player.track = track.tracks[0];
-        } else {
-            player.track = track;
-        }
+        player.track = track;
 
-        if (!player.track.streamable) {
-            if (player.playlist.length > 1)
-                player.next();
-        } else {
-            player.trackElapsedPercentage = 0;
-            player.trackElapsedPercentageStyle = getTrackCurrentPercent(player);
-            player.audio.src = player.track.stream_url;
-            player.audio.play();
-            player.isPlaying = true;
+        player.trackElapsedPercentage = 0;
+        player.trackElapsedPercentageStyle = getTrackCurrentPercent(player);
+        player.audio.src = player.track.stream_url;
+        player.audio.play();
+        player.isPlaying = true;
 
-            startTrackTick(player);
-        }
+        startTrackTick(player);
     }
 
 	return this.player;

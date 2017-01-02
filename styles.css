@@ -73,6 +73,7 @@ ul.search-result li img {
 }
 
 label.profile-name {
+    vertical-align: middle;
     padding-left: 25px;
 }
 

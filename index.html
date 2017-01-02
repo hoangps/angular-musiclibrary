@@ -61,6 +61,7 @@
                         <input type=hidden value="{{userProfile.id}}" />
                         <label class="profile-name">
                             <h3>{{ !userProfile.full_name ? userProfile.username : userProfile.full_name }}</h3>
+                            <h4 ng-show="userProfile.full_name">({{ userProfile.username }})</h4>
                             <a href="{{userProfile.permalink_url}}" target="_blank">View profile</a>
                         </label>
                     </div>
