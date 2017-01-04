@@ -133,6 +133,11 @@ myApp.controller('mainController', function ($scope, $http, $location, anchorSmo
             url: 'http://api.soundcloud.com/' + resource + '?q=' + keywords.replace(' ', '%20') + '&limit=10&client_id=' + CLIENT_ID
         }).then(function (res) {
 
+            for(var i=0; i<res.data.length; i++){
+                if(resource == 'tracks' && !res.data[i].artwork_url)
+                    res.data[i].artwork_url = "img/default-artwork.png";
+            }
+
             $scope.search.result = res.data;
         });
     }
