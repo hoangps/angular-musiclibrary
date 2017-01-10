@@ -44,8 +44,6 @@ myApp.controller('mainController', function ($scope, $http, $location, anchorSmo
 
         getUserProfile(user.id);
         $scope.profileSelected = true;
-
-        $scope.hideLibrary();
     }
 
     $scope.selectTrack = function (track) {
@@ -148,6 +146,7 @@ myApp.controller('mainController', function ($scope, $http, $location, anchorSmo
             url: 'http://api.soundcloud.com/users/' + userId + '?client_id=' + CLIENT_ID
         }).then(function (res) {
             $scope.userProfile = res.data;
+            $scope.hideLibrary();
         });
     }
 
